@@ -14,6 +14,10 @@ import java.util.List;
 import static pl.miken.electionhandler.enumeration.ErrorCodes.USER_WITH_ID_NOT_FOUND;
 import static pl.miken.electionhandler.enumeration.ErrorCodes.USER_WITH_PERSONAL_NUMBER_ALREADY_EXITS;
 
+/**
+ * Facade for managing users
+ * @see UserService
+ */
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -22,6 +26,10 @@ public class UserFacade {
     private final UserService userService;
     private final UserMapper userMapper;
 
+    /**
+     * Find user by its ID
+     * @param userId user ID
+     */
     public UserResponse getUserData(Long userId) {
         var user = userService.findActiveUserById(userId).orElseThrow(
                 () -> new CodedException(USER_WITH_ID_NOT_FOUND,
@@ -31,12 +39,20 @@ public class UserFacade {
         return userMapper.toUserResponse(user);
     }
 
+    /**
+     * Find all active users
+     * @param userId user ID
+     */
     public List<UserResponse> getAllActiveUsers() {
         return userService.findAllActiveUsers().stream()
                 .map(userMapper::toUserResponse)
                 .toList();
     }
 
+    /**
+     * Deactivate user by its ID
+     * @param userId user ID
+     */
     public void deactivateUser(Long userId) {
         var user = userService.findActiveUserById(userId).orElseThrow(() -> new CodedException(USER_WITH_ID_NOT_FOUND,
                 USER_WITH_ID_NOT_FOUND.getMessage().formatted(userId))
@@ -45,6 +61,10 @@ public class UserFacade {
         userService.saveUser(user);
     }
 
+    /**
+     * Activate user by its ID
+     * @param userId user ID
+     */
     public void activateUser(Long userId) {
         var user = userService.findUserById(userId).orElseThrow(() -> new CodedException(USER_WITH_ID_NOT_FOUND,
                 USER_WITH_ID_NOT_FOUND.getMessage().formatted(userId))
@@ -53,6 +73,10 @@ public class UserFacade {
         userService.saveUser(user);
     }
 
+    /**
+     * Create new user
+     * @param userRequest user data
+     */
     public  UserResponse createUser(UserRequest userRequest) {
         var user = userService.findUserByPersonalNumber(userRequest.getPersonalNumber()).orElse(null);
 

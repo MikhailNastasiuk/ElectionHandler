@@ -19,12 +19,17 @@ import java.time.LocalDate;
 import java.util.List;
 
 import static java.util.Objects.isNull;
+import static pl.miken.electionhandler.enumeration.ErrorCodes.ACTIVE_VOTE_WITH_IDENTIFIER_NOT_FOUND;
 import static pl.miken.electionhandler.enumeration.ErrorCodes.CANT_CHANGE_VOTE;
 import static pl.miken.electionhandler.enumeration.ErrorCodes.CANT_START_NEW_VOTE;
-import static pl.miken.electionhandler.enumeration.ErrorCodes.ACTIVE_VOTE_WITH_IDENTIFIER_NOT_FOUND;
 import static pl.miken.electionhandler.enumeration.ErrorCodes.VOTE_WITH_IDENTIFIER_ALREADY_EXITS;
 import static pl.miken.electionhandler.enumeration.ErrorCodes.VOTE_WITH_IDENTIFIER_NOT_FOUND;
 
+/**
+ * Facade for managing votes and their options
+ * @see VoteService
+ * @see ActiveVotingService
+ */
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -35,12 +40,22 @@ public class VoteFacade {
     private final ActiveVotingService activeVotingService;
     private final ObjectMapperService objectMapperService;
 
+    /**
+     * Find vote by its identifier
+     * @param uniqueIdentifier unique vote identifier
+     * @return vote data
+     */
     public VoteDataPayload findVoteByUniqueIdentifier(String uniqueIdentifier) {
         var vote = getVoteByUniqueIdentifier(uniqueIdentifier);
 
         return voteMapper.toPayload(buildNewVote(vote));
     }
 
+    /**
+     * Find active voting by vote identifier
+     * @param uniqueIdentifier unique vote identifier
+     * @return voting data
+     */
     public VoteDataPayload findActiveByUniqueIdentifier(String uniqueIdentifier) {
         var vote = getVoteByUniqueIdentifier(uniqueIdentifier);
         var activeVoting = activeVotingService.getActiveVoting(vote).orElseThrow(
@@ -52,6 +67,9 @@ public class VoteFacade {
         return objectMapperService.deserializeObject(activeVoting.getVoteJson(), VoteDataPayload.class, errorMessage);
     }
 
+    /**
+     * Find all active voting
+     */
     public List<VoteDataPayload> findAllActiveVote() {
         var activeVoting = activeVotingService.getAllActiveVotings();
 
@@ -65,12 +83,19 @@ public class VoteFacade {
                 .toList();
     }
 
+    /**
+     * Find all active votes
+     */
     public List<VoteResponse> getAllActiveVotes() {
         return voteService.findAllActiveVotes().stream()
                 .map(voteMapper::toResponse)
                 .toList();
     }
 
+    /**
+     * Start voting by vote identifier
+     * @param uniqueIdentifier unique vote identifier
+     */
     public void startVote(String uniqueIdentifier) {
         var vote = getVoteByUniqueIdentifier(uniqueIdentifier);
         var activeVoting = activeVotingService.getActiveVoting(vote);
@@ -90,6 +115,10 @@ public class VoteFacade {
         activeVotingService.saveActiveVoting(newVote);
     }
 
+    /**
+     * Disable vote by its identifier, if no active voting present
+     * @param uniqueIdentifier unique vote identifier
+     */
     public void removeVote(String uniqueIdentifier) {
         var vote = getVoteByUniqueIdentifier(uniqueIdentifier);
         var activeVoting = activeVotingService.getActiveVoting(vote);
@@ -103,6 +132,10 @@ public class VoteFacade {
         voteService.save(vote);
     }
 
+    /**
+     * Add new vote
+     * @param voteDataPayload new vote data
+     */
     public void addVote(VoteDataPayload voteDataPayload) {
         var vote = voteService.findByUniqueIdentifier(voteDataPayload.getUniqueIdentifier());
         if (vote.isPresent()) {
@@ -122,6 +155,11 @@ public class VoteFacade {
         voteService.save(newVote);
     }
 
+    /**
+     * Add option to vote
+     * @param uniqueIdentifier unique vote identifier
+     * @param optionPayload option data
+     */
     public void addOptionToVote(String uniqueIdentifier, VoteOptionPayload optionPayload) {
         var vote = getVoteAndCheckIsActive(uniqueIdentifier);
 
@@ -142,6 +180,11 @@ public class VoteFacade {
         voteService.save(vote);
     }
 
+    /**
+     * Remove option from vote
+     * @param uniqueIdentifier unique vote identifier
+     * @param optionPayload option data
+     */
     public void removeOptionFromVote(String uniqueIdentifier, VoteOptionPayload optionPayload) {
         if (isNull(optionPayload.getId())) {
             var errorMessage = "Option id can't be null";

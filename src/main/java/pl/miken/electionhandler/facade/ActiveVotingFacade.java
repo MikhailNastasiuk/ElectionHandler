@@ -28,6 +28,12 @@ import static pl.miken.electionhandler.enumeration.ErrorCodes.USER_ALREADY_VOTED
 import static pl.miken.electionhandler.enumeration.ErrorCodes.USER_WITH_ID_NOT_FOUND;
 import static pl.miken.electionhandler.enumeration.ErrorCodes.VOTE_WITH_IDENTIFIER_NOT_FOUND;
 
+/**
+ * Facade for managing active voting
+ * @see UserService
+ * @see VoteService
+ * @see ActiveVotingService
+ */
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -38,6 +44,10 @@ public class ActiveVotingFacade {
     private final ActiveVotingService activeVotingService;
     private final ObjectMapperService objectMapperService;
 
+    /**
+     * Add new voting from user
+     * @param votingRequest request to create new voting
+     */
     public void addVoting(VotingRequest votingRequest) {
         var user = getActiveUser(votingRequest.getUserId());
         var vote = getVoteByUniqueIdentifier(votingRequest.getVoteIdentifier());
@@ -62,6 +72,11 @@ public class ActiveVotingFacade {
                 .build());
     }
 
+    /**
+     * Get voting data:</br>
+     * How many votes added to vote option
+     * @param voteIdentifier unique vote identifier
+     */
     public VotingDataResponse getActiveVotingData(String voteIdentifier) {
         var vote = getVoteByUniqueIdentifier(voteIdentifier);
         var activeVoting = getActiveVoting(vote);
