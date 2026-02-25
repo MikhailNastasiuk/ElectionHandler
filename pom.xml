@@ -21,22 +21,6 @@
         <mapstruct.version>1.6.3</mapstruct.version>
     </properties>
 
-    <!-- delete this !!!-->
-    <url/>
-    <licenses>
-        <license/>
-    </licenses>
-    <developers>
-        <developer/>
-    </developers>
-    <scm>
-        <connection/>
-        <developerConnection/>
-        <tag/>
-        <url/>
-    </scm>
-    <!-- delete this !!!-->
-
     <dependencies>
         <dependency>
             <groupId>org.springframework.boot</groupId>
