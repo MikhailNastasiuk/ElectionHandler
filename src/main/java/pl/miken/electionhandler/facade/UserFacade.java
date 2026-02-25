@@ -41,7 +41,6 @@ public class UserFacade {
 
     /**
      * Find all active users
-     * @param userId user ID
      */
     public List<UserResponse> getAllActiveUsers() {
         return userService.findAllActiveUsers().stream()
