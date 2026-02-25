@@ -1,0 +1,30 @@
+spring:
+  application:
+    name: ElectionHandler
+  datasource:
+    url: jdbc:postgresql://localhost:5432/election_db
+    username: db_user
+    password: passwordXXX
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+  jackson:
+    default-property-inclusion: non_null
+    deserialization:
+      fail-on-unknown-properties: false
+  liquibase:
+    enabled: true
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,loggers
+
+election-handler:
+  jobs-schedule:
+    check-finished-voting: "0 0 2 * * *"

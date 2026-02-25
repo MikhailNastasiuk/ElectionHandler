@@ -1,0 +1,13 @@
+databaseChangeLog:
+
+#db changes
+  - includeAll:
+      path: db/changelog/tables/
+
+#data inserting
+  - include:
+      file: db/changelog/data/add_users.yaml
+  - include:
+      file: db/changelog/data/add_votes.yaml
+  - include:
+      file: db/changelog/data/add_vote_options.yaml

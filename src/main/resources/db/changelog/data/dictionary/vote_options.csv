@@ -1,0 +1,11 @@
+vote_id,option_name,is_archived
+1,Dogs,false
+1,Cats,false
+2,"Liam Anderson",false
+2,"Sophie Martinez",false
+2,"Noah Thompso",false
+3,"Fahrenheit 451 (Ray Bradbury)",false
+3,"The Little Prince (Antoine de Saint-Exupéry)",false
+3,"The Adventures of Sherlock Holmes (Arthur Conan Doyle)",false
+3,"Robinson Crusoe (Daniel Defoe)",false
+3,"Treasure Island (Robert Louis Stevenson)",false

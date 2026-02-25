@@ -1,0 +1,9 @@
+first_name,last_name,personal_number,email,age,is_active
+Jan,Kowalski,85031212345,jan.kowalski@example.com,39,true
+Anna,Nowak,92071554321,anna.nowak@example.com,33,true
+Piotr,Zielinski,78010167890,piotr.zielinski@example.com,47,true
+Katarzyna,Wojcik,99092311223,katarzyna.wojcik@example.com,17,true
+Marek,Kaminski,87040699887,marek.kaminski@example.com,38,false
+Magdalena,Lewandowska,95081833445,magdalena.lewandowska@example.com,30,true
+Tomasz,Kaczmarek,91022455678,tomasz.kaczmarek@example.com,17,true
+Agnieszka,Dabrowska,88053022119,agnieszka.dabrowska@example.com,41,true

@@ -1,0 +1,18 @@
+version: '3.9'
+
+services:
+  postgres:
+    container_name: eh_db
+    image: postgres:18
+    restart: on-failure
+    environment:
+      POSTGRES_DB: election_db
+      POSTGRES_USER: db_user
+      POSTGRES_PASSWORD: passwordXXX
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql
+
+volumes:
+  postgres_data:

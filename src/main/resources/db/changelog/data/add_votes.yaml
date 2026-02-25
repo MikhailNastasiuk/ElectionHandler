@@ -1,0 +1,16 @@
+databaseChangeLog:
+  - changeSet:
+      id: load-votes
+      author: Mike Nastasiuk
+      runOnChange: true
+      validCheckSum:
+        - ANY
+      changes:
+        - loadUpdateData:
+            primaryKey: id
+            commentLineStartsWith: '#'
+            encoding: UTF-8
+            file: db/changelog/data/dictionary/votes.csv
+            quotchar: '"'
+            separator: ','
+            tableName: votes

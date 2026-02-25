@@ -1,0 +1,4 @@
+vote_name,unique_identifier,description,duration_period_in_days,version,is_adult,is_multiple,is_archived
+"Dogs And Cats",DAC,"Vote for who you like more, dogs or cats.",15,1,false,false,false
+"Mayor elections",MA,"Vote for the new mayor.",30,1,true,false,false
+"Favorite book",FB,"Vote for your favorite books.",20,1,false,true,false

@@ -1,0 +1,276 @@
+databaseChangeLog:
+
+  - changeSet:
+      id: create-users
+      author: Mike Nastasiuk
+      changes:
+        - createTable:
+            tableName: users
+            columns:
+              - column:
+                  name: id
+                  type: BIGSERIAL
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: first_name
+                  type: VARCHAR(50)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: last_name
+                  type: VARCHAR(100)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: personal_number
+                  type: VARCHAR(20)
+                  constraints:
+                    unique: true
+                    nullable: false
+              - column:
+                  name: email
+                  type: VARCHAR(100)
+                  constraints:
+                    unique: true
+                    nullable: false
+              - column:
+                  name: age
+                  type: INTEGER
+                  constraints:
+                    nullable: false
+              - column:
+                  name: is_active
+                  type: BOOLEAN
+                  defaultValue: "true"
+                  constraints:
+                    nullable: false
+
+  - changeSet:
+      id: create-votes
+      author: Mike Nastasiuk
+      changes:
+        - createTable:
+            tableName: votes
+            columns:
+              - column:
+                  name: id
+                  type: BIGSERIAL
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: vote_name
+                  type: VARCHAR(100)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: unique_identifier
+                  type: VARCHAR(50)
+                  constraints:
+                    unique: true
+                    nullable: false
+              - column:
+                  name: description
+                  type: TEXT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: duration_period_in_days
+                  type: INTEGER
+                  constraints:
+                    nullable: false
+              - column:
+                  name: version
+                  type: INTEGER
+                  constraints:
+                    nullable: false
+              - column:
+                  name: is_adult
+                  type: BOOLEAN
+                  defaultValue: true
+                  constraints:
+                    nullable: false
+              - column:
+                  name: is_multiple
+                  type: BOOLEAN
+                  defaultValue: false
+                  constraints:
+                    nullable: false
+              - column:
+                  name: is_archived
+                  type: BOOLEAN
+                  defaultValue: false
+                  constraints:
+                    nullable: false
+
+  - changeSet:
+      id: create-vote_options
+      author: Mike Nastasiuk
+      changes:
+        - createTable:
+            tableName: vote_options
+            columns:
+              - column:
+                  name: id
+                  type: BIGSERIAL
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: vote_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: option_name
+                  type: VARCHAR(100)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: is_archived
+                  type: BOOLEAN
+                  defaultValue: false
+                  constraints:
+                    nullable: false
+        - addForeignKeyConstraint:
+            baseTableName: vote_options
+            baseColumnNames: vote_id
+            referencedTableName: votes
+            referencedColumnNames: id
+            constraintName: fk_vote_options_votes
+
+  - changeSet:
+      id: create-active_votings
+      author: Mike Nastasiuk
+      changes:
+        - createTable:
+            tableName: active_votings
+            columns:
+              - column:
+                  name: id
+                  type: BIGSERIAL
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: vote_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: vote_json
+                  type: TEXT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: started_date
+                  type: DATE
+                  defaultValueComputed: CURRENT_DATE
+                  constraints:
+                    nullable: false
+              - column:
+                  name: finished_date
+                  type: DATE
+                  defaultValueComputed: CURRENT_DATE
+                  constraints:
+                    nullable: true
+              - column:
+                  name: vote_version
+                  type: INTEGER
+                  constraints:
+                    nullable: false
+        - addForeignKeyConstraint:
+            baseTableName: active_votings
+            baseColumnNames: vote_id
+            referencedTableName: votes
+            referencedColumnNames: id
+            constraintName: fk_active_votings_votes
+
+  - changeSet:
+      id: create-vote_answers
+      author: Mike Nastasiuk
+      changes:
+        - createTable:
+            tableName: vote_answers
+            columns:
+              - column:
+                  name: id
+                  type: BIGSERIAL
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: user_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: active_voting_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: vote_option_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: vote_date
+                  type: DATE
+                  defaultValueComputed: CURRENT_DATE
+                  constraints:
+                    nullable: false
+        - addForeignKeyConstraint:
+            baseTableName: vote_answers
+            baseColumnNames: user_id
+            referencedTableName: users
+            referencedColumnNames: id
+            constraintName: fk_vote_answers_users
+        - addForeignKeyConstraint:
+            baseTableName: vote_answers
+            baseColumnNames: active_voting_id
+            referencedTableName: active_votings
+            referencedColumnNames: id
+            constraintName: fk_vote_answers_active_votings
+        - addForeignKeyConstraint:
+            baseTableName: vote_answers
+            baseColumnNames: vote_option_id
+            referencedTableName: vote_options
+            referencedColumnNames: id
+            constraintName: fk_vote_answers_vote_options
+
+#  - changeSet:
+#      id: create-user_answers
+#      author: Mike Nastasiuk
+#      changes:
+#        - createTable:
+#            tableName: user_answers
+#            columns:
+#              - column:
+#                  name: user_id
+#                  type: BIGINT
+#                  constraints:
+#                    nullable: false
+#              - column:
+#                  name: answer_id
+#                  type: BIGINT
+#                  constraints:
+#                    nullable: false
+#        - addPrimaryKey:
+#            tableName: user_answers
+#            columnNames: user_id, answer_id
+#            constraintName: pk_user_answers
+#        - addForeignKeyConstraint:
+#            baseTableName: user_answers
+#            baseColumnNames: user_id
+#            referencedTableName: users
+#            referencedColumnNames: id
+#            constraintName: fk_user_answers_users
+#        - addForeignKeyConstraint:
+#            baseTableName: user_answers
+#            baseColumnNames: answer_id
+#            referencedTableName: vote_answers
+#            referencedColumnNames: id
+#            constraintName: fk_user_answers_vote_answers
